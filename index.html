@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sonic Pro - 沉浸於純粹的聲音</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* 【1. 基礎與變數設定】 */
+    :root {
+      --bg-color: #000000;
+      --text-main: #ffffff;
+      --text-muted: #a1a1a6;
+      --accent-color: #06c;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, "SF Pro Display", "Helvetica Neue", "Noto Sans TC", sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 【2. 透明導覽列】 */
+    nav {
+      position: fixed;
+      top: 0; width: 100%;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 5%;
+      z-index: 100;
+      transition: background 0.4s, backdrop-filter 0.4s;
+    }
+    nav.scrolled {
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .brand-logo { font-size: 24px; font-weight: 700; letter-spacing: 1px; }
+    .nav-links { display: flex; gap: 32px; }
+    .nav-links a { text-decoration: none; color: var(--text-main); opacity: 0.8; font-size: 14px; transition: 0.2s; }
+    .nav-links a:hover { opacity: 1; }
+
+    /* 【3. 首屏：圖文分離排版】 */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center;
+      padding-top: 15vh;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: clamp(48px, 8vw, 96px);
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    .hero p {
+      font-size: clamp(20px, 4vw, 28px);
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+    .hero-img-container {
+      width: 100%;
+      max-width: 1000px;
+      padding: 0 20px;
+      margin-top: 40px;
+    }
+    .hero-img-container img {
+      width: 100%;
+      height: 60vh;
+      object-fit: cover; 
+      border-radius: 24px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+    }
+
+    /* 【4. 動態淡入效果】 */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1), transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .reveal.show { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* 【5. 全螢幕沉浸式圖片 + Sticky 文字敘事】 */
+    .immersive-section {
+      position: relative;
+      height: 250vh; 
+    }
+    .immersive-bg {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      width: 100%;
+      
+      /* 👉 修改點：改成載入本地的 bg-immersive.jpg */
+      background-image: url('images/bg-immersive.jpg');
+      
+      background-size: cover;
+      background-position: center;
+      background-color: #000;
+      box-shadow: inset 0 0 0 2000px rgba(0,0,0,0.4); 
+      z-index: 0;
+    }
+    .immersive-content {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      display: flex; flex-direction: column; 
+      justify-content: space-around; 
+      align-items: center;
+      z-index: 1;
+      padding: 200px 20px;
+    }
+    .immersive-text {
+      font-size: clamp(32px, 5vw, 64px);
+      font-weight: 700;
+      text-align: center;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+    }
+
+    /* 【6. 圖片與圖文卡片網格】 */
+    .features {
+      padding: 120px 5%;
+      max-width: 1200px; margin: 0 auto;
+    }
+    .features-title {
+      font-size: 48px; text-align: center; margin-bottom: 60px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+    }
+    .card {
+      background: #1c1c1e;
+      border-radius: 24px;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .card-img {
+      width: 100%; height: 250px;
+      object-fit: cover; 
+    }
+    .card-content { padding: 32px; }
+    .card-content h3 { font-size: 24px; margin-bottom: 12px; }
+    .card-content p { color: var(--text-muted); line-height: 1.6; }
+
+    footer {
+      text-align: center; padding: 60px 20px;
+      color: var(--text-muted); font-size: 14px;
+      border-top: 1px solid #333;
+    }
+  </style>
+</head>
+<body>
+
+  <nav id="navbar">
+    <div class="brand-logo">Sonic</div>
+    <div class="nav-links">
+      <a href="#">設計</a>
+      <a href="#">音質</a>
+      <a href="#">購買</a>
+    </div>
+  </nav>
+
+  <main class="hero">
+    <h1 class="reveal">Sonic Pro</h1>
+    <p class="reveal" style="transition-delay: 0.1s;">阻絕喧囂，只留純粹。</p>
+    
+    <div class="hero-img-container reveal" style="transition-delay: 0.2s;">
+      <!-- 👉 修改點：改成載入本地的 hero-image.jpg -->
+      <img src="images/hero-image.jpg" alt="Sonic Pro 首圖">
+    </div>
+  </main>
+
+  <section class="immersive-section">
+    <div class="immersive-bg"></div>
+    <div class="immersive-content">
+      <div class="immersive-text reveal">
+        主動降噪技術，<br>每秒運算十萬次。
+      </div>
+      <div class="immersive-text reveal">
+        細節，<br>從未如此清晰。
+      </div>
+    </div>
+  </section>
+
+  <section class="features">
+    <h2 class="features-title reveal">極致工藝，處處講究。</h2>
+    <div class="grid">
+      <!-- 卡片 1 -->
+      <div class="card reveal">
+        <!-- 👉 修改點：改成載入本地的 feature1.jpg -->
+        <img class="card-img" src="images/feature1.jpg" alt="特色一">
+        <div class="card-content">
+          <h3>記憶海綿耳罩</h3>
+          <p>採用聲學編織布料與特製記憶海綿，完美貼合雙耳，提供無與倫比的舒適感與物理隔音。</p>
+        </div>
+      </div>
+      <!-- 卡片 2 -->
+      <div class="card reveal" style="transition-delay: 0.1s;">
+        <!-- 👉 修改點：改成載入本地的 feature2.jpg -->
+        <img class="card-img" src="images/feature2.jpg" alt="特色二">
+        <div class="card-content">
+          <h3>40 小時超長續航</h3>
+          <p>充沛電量支撐你的每一趟旅程。支援快充，只需充電 5 分鐘，即可聆聽 4 小時。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Copyright © 2026 Sonic Audio Inc. 保留一切權利。</p>
+    <p style="margin-top: 8px;">【本網站為課堂教學範例練習作品，品牌為虛構範例。】</p>
+  </footer>
+
+  <script>
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    }, { passive: true });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { 
+      threshold: 0.2, 
+      rootMargin: "0px 0px -50px 0px" 
+    });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
